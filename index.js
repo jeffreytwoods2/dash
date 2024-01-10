@@ -1,6 +1,8 @@
-document.onload(() => {
-    const menuBtn = document.getElementById("menu-btn")
-    const nav = document.getElementById("dropdown")
+window.onload = () => {
+    let menu = document.getElementById("menu-btn")
+    let nav = document.getElementById("dropdown")
 
-    menuBtn.addEventListener("click", () => nav.classList.toggle("menu-toggle"))
-})
+    menu.addEventListener("click", () => {
+        nav.classList.toggle("menu-open")
+    })
+}
