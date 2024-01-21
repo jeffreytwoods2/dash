@@ -1,13 +1,14 @@
+{{define "base"}}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="./favicons/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="/static/favicons/favicon.ico" type="image/x-icon" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="mc.jwoods.dev" />
     <meta property="og:title" content="A Craft server for the real ones." />
     <meta property="og:url" content="https://mc.jwoods.dev" />
-    <meta property="og:image" content="./images/smile.jpeg" />
+    <meta property="og:image" content="/static/img/smile.jpeg" />
     <meta
       property="og:description"
       content="Dashboard for the mc.jwoods.dev Minecraft server."
@@ -25,18 +26,18 @@
       content="black-translucent"
     />
     <meta name="theme-color" content="#4A6F28" />
-    <link rel="apple-touch-icon" href="./favicons/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" href="/static/favicons/apple-touch-icon.png" />
     <link
       rel="manifest"
-      href="/manifest.webmanifest"
+      href="/static/manifest.webmanifest"
       type="application/manifest+json"
     />
     <meta
       name="viewport"
       content="initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover"
     />
-    <link rel="stylesheet" href="main.css" type="text/css" />
-    <script src="main.js" defer></script>
+    <link rel="stylesheet" href="/static/css/main.css" type="text/css" />
+    <script src="/static/js/main.js" defer></script>
     <title>Real Ones - {{template "title"}}</title>
   </head>
   <body class="body-dropdown-closed">
@@ -47,3 +48,4 @@
     </main>
   </body>
 </html>
+{{end}}
