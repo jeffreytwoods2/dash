@@ -37,105 +37,11 @@
     />
     <link rel="stylesheet" href="main.css" type="text/css" />
     <script src="main.js" defer></script>
-    <title>Real Ones - Dash</title>
+    <title>Real Ones - {{template "title"}}</title>
   </head>
   <body class="body-dropdown-closed">
-    <header>
-      <div id="header-content">
-        <a href="/"
-          ><img
-            src="./images/omen.webp"
-            width="180"
-            height="180"
-            alt="Logo"
-            id="logo"
-        /></a>
-        <p>Real Ones Only</p>
-        <img
-          src="./images/bars-solid.svg"
-          alt="Menu button"
-          height="16"
-          width="14"
-          id="menu"
-        />
-      </div>
-    </header>
     <main>
-      <nav id="dropdown" class="dropdown-closed">
-        <a href="#">Account</a>
-        <a href="#">Live Map</a>
-        <a href="#">Sign out</a>
-      </nav>
-      <div class="widget">
-        <div class="widget-title-box">
-          <p class="widget-title">Online</p>
-        </div>
-        <div class="widget-content-box">
-          <div id="online-content">
-            <!-- <p id="no-one">No players online</p> -->
-            <div class="online-player">
-              <div class="name-block">
-                <div class="indicator-wrapper">
-                  <svg
-                    viewBox="0 0 200 200"
-                    width="10"
-                    height="10"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle
-                      fill="lime"
-                      cx="100"
-                      cy="100"
-                      r="100"
-                      shape-rendering="geometricPrecision"
-                    />
-                  </svg>
-                </div>
-                <p class="player-name">Brobrohibro</p>
-              </div>
-              <p class="location">Nether (420, -69, 8008)</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="widget">
-        <div class="widget-title-box">
-          <p class="widget-title">Music</p>
-          <p
-            style="
-              color: #ffff55;
-              font-size: 1.3em;
-              text-align: center;
-              margin-block: 2px;
-            "
-          >
-            Under construction
-          </p>
-        </div>
-        <div class="widget-content-box">
-          <img
-            src="images/cat-disc.png"
-            id="music-disc"
-            alt="Green music disc"
-            width="100"
-            height="100"
-          />
-        </div>
-      </div>
-      <div class="widget" id="map-widget">
-        <div class="widget-title-box">
-          <p class="widget-title">Live Map</p>
-        </div>
-        <a href="https://mc.jwoods.dev" class="widget-content-box">
-          <img
-            src="./images/map-sizes/map-831.png"
-            width="831"
-            height="443"
-            alt="Isowidget world map"
-            id="map"
-          />
-        </a>
-      </div>
+      
     </main>
   </body>
 </html>
