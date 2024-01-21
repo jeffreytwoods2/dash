@@ -5,8 +5,13 @@ import (
 	"path/filepath"
 	"text/template"
 
+	"mc.jwoods.dev/internal/models"
 	"mc.jwoods.dev/ui"
 )
+
+type templateData struct {
+	Players []models.Player
+}
 
 func newTemplateCache() (map[string]*template.Template, error) {
 	cache := map[string]*template.Template{}

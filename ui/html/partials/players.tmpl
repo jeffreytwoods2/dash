@@ -1,5 +1,5 @@
-{{define "player"}}
-<!-- <p id="no-one">No players online</p> -->
+{{define "players"}}
+{{ range .Players }}
 <div class="online-player">
   <div class="name-block">
     <div class="indicator-wrapper">
@@ -18,8 +18,11 @@
         />
       </svg>
     </div>
-    <p class="player-name">Brobrohibro</p>
+    <p class="player-name">{{.Name}}</p>
   </div>
-  <p class="location">Nether (420, -69, 8008)</p>
+  <p class="location">{{.Location}}</p>
 </div>
+{{ else }}
+<p id="no-one">No players online</p>
+{{ end }}
 {{ end }}
