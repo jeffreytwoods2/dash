@@ -14,19 +14,21 @@ body {
     font-family: "Minecraft";
     display: flex;
     flex-direction: column;
-    background-color: #082f49;
-    color: #a3e635;
+    /* color: #a3e635; */
+    color: #444444;
+    background-color: #F5F5F5;
 }
 
 header {
     width: 100%;
     position: relative;
+    background-color: white;
 }
 
 #header-bar {
     width: 100%;
     box-sizing: border-box;
-    border-bottom: solid 1px #84cc16;
+    border-bottom: solid 1px black;
     display: flex;
     justify-content: space-between;
     padding: 10px;
@@ -35,7 +37,7 @@ header {
 #header-name {
     display: block;
     align-self: center;
-    font-size: 1.6em;
+    font-size: 1.8em;
 }
 
 main {
@@ -72,7 +74,7 @@ nav li {
     font-size: xx-large;
     margin: 20px;
     padding-bottom: 10px;
-    border-bottom: solid 1px #84cc16;
+    border-bottom: solid 1px black;
 }
 
 /* The Online component */
@@ -80,8 +82,9 @@ nav li {
 .metric {
     display: flex;
     flex-direction: column;
-    border: solid 1px #84cc16;
+    border: solid 1px black;
     border-radius: 10px;
+    background-color: white;
 }
 
 .metric-title {
@@ -89,7 +92,7 @@ nav li {
     text-align: center;
     margin: 0;
     padding: 10px;
-    border-bottom: solid 1px #84cc16;
+    border-bottom: solid 1px black;
 }
 
 #player-list {
@@ -99,7 +102,7 @@ nav li {
 }
 
 #player-list div:not(:first-child) {
-    border-top: solid 1px #84cc16;
+    border-top: solid 1px black;
     padding-top: 20px;
 }
 
@@ -140,4 +143,11 @@ a {
     display: block;
     width: 100%;
     height: auto;
+}
+
+/* Making the audio player look good in every browser */
+
+audio {
+    width: 100%;
+    background: none;
 }
