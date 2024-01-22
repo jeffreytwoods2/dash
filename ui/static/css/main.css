@@ -188,7 +188,8 @@ main {
 }
 
 .light-wrapper {
-  vertical-align: middle;
+  display: grid;
+  place-items: center;
 }
 
 .green-light {
@@ -198,7 +199,7 @@ main {
   border-radius: 50%;
   display: inline-block;
   vertical-align: middle;
-  box-shadow: 1px 1px 3px black, 0 0 5px 3px lime;
+  box-shadow: 2px 2px 4px #000000;
 }
 
 .location {
