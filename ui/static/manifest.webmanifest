@@ -4,35 +4,35 @@
     "start_url": "/",
     "icons": [
       {
-        "src": "/icons/favicon.ico",
+        "src": "/static/favicons/favicon.ico",
         "type": "image/ico",
         "sizes": "48x48"
       },
       {
-        "src": "/icons/apple-touch-icon.png",
+        "src": "/static/favicons/apple-touch-icon.png",
         "type": "image/png",
         "sizes": "180x180"
       },
       {
-        "src": "/icons/android-chrome-512x512.png",
+        "src": "/static/favicons/android-chrome-512x512.png",
         "type": "image/png",
         "sizes": "512x512",
         "purpose": "any"
       },
       {
-        "src": "/icons/maskable192.png",
+        "src": "/static/favicons/maskable192.png",
         "type": "image/png",
         "sizes": "192x192",
         "purpose": "maskable"
       },
       {
-        "src": "/icons/maskable512.png",
+        "src": "/static/favicons/maskable512.png",
         "type": "image/png",
         "sizes": "512x512",
         "purpose": "maskable"
       },
       {
-        "src": "/icons/android-chrome-192x192.png",
+        "src": "/static/favicons/android-chrome-192x192.png",
         "type": "image/png",
         "sizes": "192x192",
         "purpose": "any"
@@ -40,7 +40,7 @@
     ],
     "background_color": "#4A6F28",
     "display": "standalone",
-    "scope": ".",
+    "scope": "/",
     "theme_color": "#4A6F28",
     "description": "Dashboard for members of the Real Ones Minecraft server"
   }

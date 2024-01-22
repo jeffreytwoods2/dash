@@ -1,24 +1,11 @@
 {{define "players"}}
-{{ range .Players }}
+{{ range.Players }}
 <div class="online-player">
   <div class="name-block">
-    <div class="indicator-wrapper">
-      <svg
-        viewBox="0 0 200 200"
-        width="10"
-        height="10"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle
-          fill="lime"
-          cx="100"
-          cy="100"
-          r="100"
-          shape-rendering="geometricPrecision"
-        />
-      </svg>
-    </div>
-    <p class="player-name">{{.Name}}</p>
+    <span class="light-wrapper">
+      <span class="green-light"></span>
+    </span>
+    <p class="player-name"> {{.Name}}</p>
   </div>
   <p class="location">{{.Location}}</p>
 </div>

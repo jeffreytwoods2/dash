@@ -170,6 +170,8 @@ main {
   column-gap: 4px;
   align-items: center;
   margin: auto;
+  height: 100%;
+  margin-bottom: 5px;
 }
 
 .online-player p {
@@ -185,13 +187,18 @@ main {
   text-shadow: 2px 2px 4px #000000;
 }
 
-.indicator-wrapper svg {
-  filter: drop-shadow(2px 2px 4px #000000);
+.light-wrapper {
+  vertical-align: middle;
 }
 
-.indicator-wrapper {
-  display: block;
-  height: 100%;
+.green-light {
+  width: 10px;
+  height: 10px;
+  background-color: lime;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+  box-shadow: 1px 1px 3px black, 0 0 5px 3px lime;
 }
 
 .location {
