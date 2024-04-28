@@ -10,7 +10,6 @@ body {
   padding: 0;
   width: 100vw;
   height: 100vh;
-  /* height: calc(100% + env(safe-area-inset-top)); */
   overflow: hidden;
   overscroll-behavior: none;
 }
@@ -54,7 +53,7 @@ header {
 
 #header-content {
   display: flex;
-  /* padding-top: env(safe-area-inset-top); */
+  padding-top: env(safe-area-inset-top);
 }
 
 header a {
