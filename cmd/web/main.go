@@ -36,6 +36,8 @@ func main() {
 		ErrorLog: slog.NewLogLogger(logger.Handler(), slog.LevelError),
 	}
 
+	logger.Info("starting web server", "port", *addr)
+
 	err = srv.ListenAndServe()
 	logger.Error(err.Error())
 	os.Exit(1)
