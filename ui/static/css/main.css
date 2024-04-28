@@ -103,11 +103,11 @@ main {
   position: fixed;
   justify-content: top;
   gap: 20px;
-  top: 60px;
+  top: calc(60px + env(safe-area-inset-top));
   right: 0;
   width: 100vw;
   z-index: 1;
-  height: calc(100vh + env(safe-area-inset-top));
+  height: 100vh;
   text-shadow: 2px 2px 4px #000000;
   color: #ffff55;
   font-size: 2.5em;
