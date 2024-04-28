@@ -107,7 +107,7 @@ main {
   right: 0;
   width: 100vw;
   z-index: 1;
-  height: 100vh;
+  height: calc(100vh + env(safe-area-inset-top));
   text-shadow: 2px 2px 4px #000000;
   color: #ffff55;
   font-size: 2.5em;
