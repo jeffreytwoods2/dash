@@ -4,9 +4,10 @@
     <p class="widget-title">Online</p>
   </div>
   <div class="widget-content-box">
-    <div id="online-content">
-      <!-- <p id="no-one">Retrieving players...</p> -->
-      {{ template "players" .}}
+    <div id="online-content" hx-ext="ws" ws-connect="/subscribe">
+      <div id="ws-wrapper">
+        {{ template "players" .}}
+      </div>
     </div>
   </div>
 </div>

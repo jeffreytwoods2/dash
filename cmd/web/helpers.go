@@ -2,13 +2,20 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io"
 	"math"
+	"net"
 	"net/http"
+	"sync"
+	"time"
 
 	"mc.jwoods.dev/internal/models"
+	"mc.jwoods.dev/ui"
+	"nhooyr.io/websocket"
 )
 
 type OnlineRes struct {
@@ -55,6 +62,34 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, status in
 	w.WriteHeader(status)
 
 	buf.WriteTo(w)
+}
+
+func (app *application) renderOnline() {
+	players, err := getPlayerCoords()
+	if err != nil {
+		app.logger.Error(err.Error())
+		return
+	}
+
+	data := templateData{
+		Players: players,
+	}
+
+	ts, err := template.New("players").ParseFS(ui.Files, "html/partials/players.tmpl")
+	if err != nil {
+		app.logger.Error(err.Error())
+		return
+	}
+
+	buf := new(bytes.Buffer)
+
+	err = ts.ExecuteTemplate(buf, "players", data)
+	if err != nil {
+		app.logger.Error(err.Error())
+		return
+	}
+
+	app.publish(buf.Bytes())
 }
 
 func sendRcon(endpoint string) ([]byte, error) {
@@ -135,4 +170,87 @@ func getPlayerCoords() ([]models.Player, error) {
 		players = append(players, currPlayer)
 	}
 	return players, nil
+}
+
+func (app *application) subscribe(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	var (
+		mu     sync.Mutex
+		c      *websocket.Conn
+		closed bool
+	)
+
+	s := &subscriber{
+		msgs: make(chan []byte, app.subscriberMessageBuffer),
+		closeSlow: func() {
+			mu.Lock()
+			defer mu.Unlock()
+			closed = true
+			if c != nil {
+				c.Close(websocket.StatusPolicyViolation, "connection too slow to keep up with messages")
+			}
+		},
+	}
+
+	app.addSubcriber(s)
+	defer app.deleteSubscriber(s)
+
+	c2, err := websocket.Accept(w, r, nil)
+	if err != nil {
+		return err
+	}
+	mu.Lock()
+	if closed {
+		mu.Unlock()
+		return net.ErrClosed
+	}
+
+	c = c2
+	mu.Unlock()
+	defer c.CloseNow()
+
+	ctx = c.CloseRead(ctx)
+
+	for {
+		select {
+		case msg := <-s.msgs:
+			err := writeTimeout(ctx, 5*time.Second, c, msg)
+			if err != nil {
+				return err
+			}
+		case <-ctx.Done():
+			return ctx.Err()
+		}
+	}
+}
+
+func (app *application) publish(msg []byte) {
+	app.subscribersMu.Lock()
+	defer app.subscribersMu.Unlock()
+
+	for s := range app.subscribers {
+		select {
+		case s.msgs <- msg:
+		default:
+			go s.closeSlow()
+		}
+	}
+}
+
+func (app *application) addSubcriber(s *subscriber) {
+	app.subscribersMu.Lock()
+	app.subscribers[s] = struct{}{}
+	app.subscribersMu.Unlock()
+}
+
+func (app *application) deleteSubscriber(s *subscriber) {
+	app.subscribersMu.Lock()
+	delete(app.subscribers, s)
+	app.subscribersMu.Unlock()
+}
+
+func writeTimeout(ctx context.Context, timeout time.Duration, c *websocket.Conn, msg []byte) error {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	return c.Write(ctx, websocket.MessageText, msg)
 }

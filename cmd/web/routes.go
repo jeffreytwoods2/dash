@@ -13,6 +13,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("/static/", fileServer)
 
 	mux.HandleFunc("/", app.home)
+	mux.HandleFunc("/subscribe", app.subscribeHandler)
 
-	return mux
+	return app.startBroadcast(mux)
 }

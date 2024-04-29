@@ -5,16 +5,26 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"sync"
 	"text/template"
 )
 
+type subscriber struct {
+	msgs      chan []byte
+	closeSlow func()
+}
+
 type application struct {
-	logger        *slog.Logger
-	templateCache map[string]*template.Template
+	logger                  *slog.Logger
+	templateCache           map[string]*template.Template
+	subscriberMessageBuffer int
+	subscribersMu           sync.Mutex
+	subscribers             map[*subscriber]struct{}
 }
 
 func main() {
 	addr := flag.String("addr", ":5001", "HTTP network address")
+	buffer := flag.Int("buffer", 16, "Max number of queued messages for a subscriber")
 	flag.Parse()
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
@@ -26,8 +36,10 @@ func main() {
 	}
 
 	app := &application{
-		logger:        logger,
-		templateCache: templateCache,
+		logger:                  logger,
+		templateCache:           templateCache,
+		subscriberMessageBuffer: *buffer,
+		subscribers:             make(map[*subscriber]struct{}),
 	}
 
 	srv := &http.Server{
