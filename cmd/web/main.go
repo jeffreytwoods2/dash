@@ -12,6 +12,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/alexedwards/scs/postgresstore"
+	"github.com/alexedwards/scs/v2"
 	_ "github.com/lib/pq"
 )
 
@@ -37,6 +39,7 @@ type application struct {
 	subscribersMu           sync.Mutex
 	subscribers             map[*subscriber]struct{}
 	config                  config
+	sessionManager          *scs.SessionManager
 }
 
 func main() {
@@ -71,12 +74,17 @@ func main() {
 		os.Exit(1)
 	}
 
+	sessionManager := scs.New()
+	sessionManager.Store = postgresstore.New(db)
+	sessionManager.Lifetime = 12 * time.Hour
+
 	app := &application{
 		config:                  cfg,
 		logger:                  logger,
 		templateCache:           templateCache,
 		subscriberMessageBuffer: *buffer,
 		subscribers:             make(map[*subscriber]struct{}),
+		sessionManager:          sessionManager,
 	}
 
 	srv := &http.Server{
