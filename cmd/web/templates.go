@@ -1,9 +1,9 @@
 package main
 
 import (
+	"html/template"
 	"io/fs"
 	"path/filepath"
-	"text/template"
 
 	"mc.jwoods.dev/internal/models"
 	"mc.jwoods.dev/ui"

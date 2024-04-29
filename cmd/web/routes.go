@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"github.com/justinas/alice"
 	"mc.jwoods.dev/ui"
 )
 
@@ -15,5 +16,6 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("/", app.home)
 	mux.HandleFunc("/subscribe", app.subscribeHandler)
 
-	return app.startBroadcast(mux)
+	standard := alice.New(app.recoverPanic, commonHeaders)
+	return standard.Then(mux)
 }

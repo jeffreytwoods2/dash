@@ -214,6 +214,13 @@ main {
   display: block;
   margin: auto;
 }
+
+#under-construction {
+  color: #ffff55;
+  font-size: 1.3em;
+  text-align: center;
+  margin-block: 2px;
+}
 /* End music component */
 
 /* Map component */
