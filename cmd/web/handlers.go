@@ -55,7 +55,7 @@ func (app *application) subscribeHandler(w http.ResponseWriter, r *http.Request)
 // }
 
 func (app *application) userSignup(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Display a form for signing up a new user...")
+	app.render(w, r, http.StatusOK, "signup.tmpl", templateData{})
 }
 
 func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {

@@ -15,6 +15,7 @@ import (
 	"github.com/alexedwards/scs/postgresstore"
 	"github.com/alexedwards/scs/v2"
 	_ "github.com/lib/pq"
+	"mc.jwoods.dev/internal/models"
 )
 
 type subscriber struct {
@@ -40,6 +41,7 @@ type application struct {
 	subscribers             map[*subscriber]struct{}
 	config                  config
 	sessionManager          *scs.SessionManager
+	users                   *models.UserModel
 }
 
 func main() {
@@ -85,6 +87,7 @@ func main() {
 		subscriberMessageBuffer: *buffer,
 		subscribers:             make(map[*subscriber]struct{}),
 		sessionManager:          sessionManager,
+		users:                   &models.UserModel{DB: db},
 	}
 
 	srv := &http.Server{

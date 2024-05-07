@@ -241,6 +241,51 @@ main {
 }
 /* End map component */
 
+/* Signup widget */
+#signup-form {
+  color: #ffff55;
+  width: 100%;
+  font-size: 1.5em;
+}
+
+#signup-form input {
+  all: unset;
+  border-block-end: solid 2px #ffff55;
+}
+
+.form-field {
+  display: grid;
+  margin-block-start: 3rem;
+}
+
+.form-field-inline {
+  display: grid;
+  margin-block-start: 3rem;
+  gap: 1rem;
+}
+
+.form-field label, .form-field-inline label {
+  font-size: 1.25em;
+}
+
+#gamertag, #password {
+  font-size: 3em;
+}
+
+#signup-btn {
+  all: unset;
+  margin-block-start: 3rem;
+  background-color: #ffff55;
+  color: black;
+  border: solid 1px #ffff55;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+/* End signup widget */
+
 /* End widgets */
 
 /* End main */
