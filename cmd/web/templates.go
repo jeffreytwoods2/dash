@@ -3,6 +3,7 @@ package main
 import (
 	"html/template"
 	"io/fs"
+	"net/http"
 	"path/filepath"
 
 	"mc.jwoods.dev/internal/models"
@@ -12,6 +13,7 @@ import (
 type templateData struct {
 	Players []models.Player
 	Form    any
+	Flash   string
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {
@@ -42,6 +44,8 @@ func newTemplateCache() (map[string]*template.Template, error) {
 	return cache, nil
 }
 
-func (app *application) newTemplateData() templateData {
-	return templateData{}
+func (app *application) newTemplateData(r *http.Request) templateData {
+	return templateData{
+		Flash: app.sessionManager.PopString(r.Context(), "flash"),
+	}
 }

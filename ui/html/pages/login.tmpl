@@ -1,0 +1,21 @@
+{{define "title"}}Log in{{end}}
+
+{{define "page"}}
+<form action="/user/login" method="POST" id="signup-form">
+    <div class="form-field">
+        <label for="gamertag">Gamertag</label>
+        <input type="text" id="gamertag" name="gamertag" value='{{.Form.Gamertag}}' {{if .Form.FieldErrors.gamertag}}class="error-input"{{end}}>
+        {{with .Form.FieldErrors.gamertag}}
+            <label class="error-label">{{.}}</label>
+        {{end}}
+    </div>
+    <div class="form-field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" {{if .Form.FieldErrors.password}}class="error-input"{{end}}>
+        {{with .Form.FieldErrors.password}}
+            <label class="error-label">{{.}}</label>
+        {{end}}
+    </div>
+    <button type="submit" id="signup-btn">Log in</button>
+</form>
+{{end}}
