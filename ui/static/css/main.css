@@ -244,32 +244,32 @@ main {
 /* Signup widget */
 #signup-form {
   color: #ffff55;
-  width: 100%;
-  font-size: 1.5em;
-}
-
-#signup-form input {
-  all: unset;
-  border-block-end: solid 2px #ffff55;
 }
 
 .form-field {
-  display: grid;
   margin-block-start: 3rem;
+  font-size: 1.5em;
 }
 
-.form-field-inline {
-  display: grid;
-  margin-block-start: 3rem;
-  gap: 1rem;
+.form-field input {
+  all: unset;
+  display: block;
+  border-block-end: solid 2px #ffff55;
+  font-size: 1.5em;
+  max-width: 100%;
 }
 
-.form-field label, .form-field-inline label {
-  font-size: 1.25em;
-}
-
-#gamertag, #password {
-  font-size: 3em;
+.form-field select {
+  display: block;
+  background: transparent;
+  color: #ffff55;
+  border: solid 2px #ffff55;
+  border-radius: 0.5em;
+  padding: 0.25em;
+  font-size: 1em;
+  max-width: 100%;
+  margin-block-start: 1em;
+  font-family: "Minecraft";
 }
 
 #signup-btn {
@@ -283,6 +283,7 @@ main {
   width: 100%;
   box-sizing: border-box;
   text-align: center;
+  font-size: 1.5em;
 }
 /* End signup widget */
 

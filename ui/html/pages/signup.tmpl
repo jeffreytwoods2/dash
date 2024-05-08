@@ -10,9 +10,13 @@
         <label for="password">Password</label>
         <input type="password" id="password" name="password">
     </div>
-    <div class="form-field-inline">
-        <input type="checkbox" id="java" name="java" value="true" checked="">
-        <label for="java">Java?</label>
+    <div class="form-field">
+        <label for="platform">Platform</label>
+        <select id="platform" name="platform" form="signup-form" required>
+            <option value="" disabled selected>Choose one...</option>
+            <option value="java">Java</option>
+            <option value="bedrock">Bedrock (Xbox, iPad, etc.)</option>
+        </select>
     </div>
 
     <button type="submit" id="signup-btn">Sign up</button>
