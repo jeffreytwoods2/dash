@@ -4,19 +4,28 @@
 <form action="/user/signup" method="POST" id="signup-form">
     <div class="form-field">
         <label for="gamertag">Gamertag</label>
-        <input type="text" id="gamertag" name="gamertag">
+        <input type="text" id="gamertag" name="gamertag" value='{{.Form.Gamertag}}' {{if .Form.FieldErrors.gamertag}}class="error-input"{{end}}>
+        {{with .Form.FieldErrors.gamertag}}
+            <label class="error-label">{{.}}</label>
+        {{end}}
     </div>
     <div class="form-field">
         <label for="password">Password</label>
-        <input type="password" id="password" name="password">
+        <input type="password" id="password" name="password" {{if .Form.FieldErrors.password}}class="error-input"{{end}}>
+        {{with .Form.FieldErrors.password}}
+            <label class="error-label">{{.}}</label>
+        {{end}}
     </div>
     <div class="form-field">
         <label for="platform">Platform</label>
-        <select id="platform" name="platform" form="signup-form" required>
-            <option value="" disabled selected>Choose one...</option>
-            <option value="java">Java</option>
-            <option value="bedrock">Bedrock (Xbox, iPad, etc.)</option>
+        <select id="platform" name="platform" form="signup-form" {{if .Form.FieldErrors.platform}}class="error-input"{{end}}>
+            <option value="" disabled {{if not .Form.Platform}}selected{{end}}>Choose one...</option>
+            <option value="java" {{if (eq .Form.Platform "java" )}}selected{{end}}>Java</option>
+            <option value="bedrock" {{if (eq .Form.Platform "bedrock" )}}selected{{end}}>Bedrock (Xbox, iPad, etc.)</option>
         </select>
+        {{with .Form.FieldErrors.platform}}
+            <label class="error-label">{{.}}</label>
+        {{end}}
     </div>
 
     <button type="submit" id="signup-btn">Sign up</button>

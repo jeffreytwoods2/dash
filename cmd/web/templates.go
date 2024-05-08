@@ -11,6 +11,7 @@ import (
 
 type templateData struct {
 	Players []models.Player
+	Form    any
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {
@@ -39,4 +40,8 @@ func newTemplateCache() (map[string]*template.Template, error) {
 	}
 
 	return cache, nil
+}
+
+func (app *application) newTemplateData() templateData {
+	return templateData{}
 }
