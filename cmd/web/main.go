@@ -14,6 +14,7 @@ import (
 
 	"github.com/alexedwards/scs/postgresstore"
 	"github.com/alexedwards/scs/v2"
+	"github.com/go-playground/form/v4"
 	_ "github.com/lib/pq"
 	"mc.jwoods.dev/internal/models"
 )
@@ -42,6 +43,7 @@ type application struct {
 	config                  config
 	sessionManager          *scs.SessionManager
 	users                   *models.UserModel
+	formDecoder             *form.Decoder
 }
 
 func main() {
@@ -76,6 +78,8 @@ func main() {
 		os.Exit(1)
 	}
 
+	formDecoder := form.NewDecoder()
+
 	sessionManager := scs.New()
 	sessionManager.Store = postgresstore.New(db)
 	sessionManager.Lifetime = 12 * time.Hour
@@ -88,6 +92,7 @@ func main() {
 		subscribers:             make(map[*subscriber]struct{}),
 		sessionManager:          sessionManager,
 		users:                   &models.UserModel{DB: db},
+		formDecoder:             formDecoder,
 	}
 
 	srv := &http.Server{

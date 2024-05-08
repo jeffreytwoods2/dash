@@ -5,17 +5,16 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strings"
-	"unicode/utf8"
 
+	"mc.jwoods.dev/internal/validator"
 	"nhooyr.io/websocket"
 )
 
 type userSignupForm struct {
-	Gamertag    string
-	Password    string
-	Platform    string
-	FieldErrors map[string]string
+	Gamertag string
+	Password string
+	Platform string
+	validator.Validator
 }
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -71,30 +70,19 @@ func (app *application) userSignup(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
+	var form userSignupForm
+
+	err := app.decodePostForm(r, &form)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
 
-	form := userSignupForm{
-		Gamertag:    r.PostForm.Get("gamertag"),
-		Password:    r.PostForm.Get("password"),
-		Platform:    r.PostForm.Get("platform"),
-		FieldErrors: map[string]string{},
-	}
+	form.CheckField(validator.NotBlank(form.Gamertag), "gamertag", "Gamertag must be provided")
+	form.CheckField(validator.MaxChars(form.Gamertag, 16), "gamertag", "Gamertag cannot be more than 16 characters")
+	form.CheckField(validator.NotBlank(form.Platform), "platform", "Platform must be provided")
 
-	if strings.TrimSpace(form.Gamertag) == "" {
-		form.FieldErrors["gamertag"] = "Gamertag must be provided"
-	} else if utf8.RuneCountInString(form.Gamertag) > 16 {
-		form.FieldErrors["gamertag"] = "Gamertag cannot be more than 16 characters"
-	}
-
-	if strings.TrimSpace(form.Platform) == "" {
-		form.FieldErrors["platform"] = "Platform must be provided"
-	}
-
-	if len(form.FieldErrors) > 0 {
+	if !form.Valid() {
 		data := app.newTemplateData()
 		data.Form = form
 		app.render(w, r, http.StatusUnprocessableEntity, "signup.tmpl", data)

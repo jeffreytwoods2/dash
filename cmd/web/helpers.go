@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"html/template"
 	"io"
@@ -14,6 +15,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/go-playground/form/v4"
 	"mc.jwoods.dev/internal/models"
 	"mc.jwoods.dev/ui"
 	"nhooyr.io/websocket"
@@ -259,4 +261,24 @@ func writeTimeout(ctx context.Context, timeout time.Duration, c *websocket.Conn,
 	defer cancel()
 
 	return c.Write(ctx, websocket.MessageText, msg)
+}
+
+func (app *application) decodePostForm(r *http.Request, dst any) error {
+	err := r.ParseForm()
+	if err != nil {
+		return err
+	}
+
+	err = app.formDecoder.Decode(dst, r.PostForm)
+	if err != nil {
+		var invalidDecoderError *form.InvalidDecoderError
+
+		if errors.As(err, &invalidDecoderError) {
+			panic(err)
+		}
+
+		return err
+	}
+
+	return nil
 }
