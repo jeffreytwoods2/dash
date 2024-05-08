@@ -6,15 +6,16 @@ import (
 	"fmt"
 	"net/http"
 
+	"mc.jwoods.dev/internal/models"
 	"mc.jwoods.dev/internal/validator"
 	"nhooyr.io/websocket"
 )
 
 type userSignupForm struct {
-	Gamertag string
-	Password string
-	Platform string
-	validator.Validator
+	Gamertag            string `form:"gamertag"`
+	Password            string `form:"password"`
+	Platform            string `form:"platform"`
+	validator.Validator `form:"-"`
 }
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -81,6 +82,7 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 	form.CheckField(validator.NotBlank(form.Gamertag), "gamertag", "Gamertag must be provided")
 	form.CheckField(validator.MaxChars(form.Gamertag, 16), "gamertag", "Gamertag cannot be more than 16 characters")
 	form.CheckField(validator.NotBlank(form.Platform), "platform", "Platform must be provided")
+	form.CheckField(validator.MinChars(form.Password, 8), "password", "Password must be at least 8 characters long")
 
 	if !form.Valid() {
 		data := app.newTemplateData()
@@ -88,6 +90,24 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 		app.render(w, r, http.StatusUnprocessableEntity, "signup.tmpl", data)
 		return
 	}
+
+	err = app.users.Insert(form.Gamertag, form.Password, form.Platform)
+	if err != nil {
+		if errors.Is(err, models.ErrDuplicateGamertag) {
+			form.AddFieldError("gamertag", "Gamertag already in use")
+			data := app.newTemplateData()
+			data.Form = form
+			app.render(w, r, http.StatusUnprocessableEntity, "signup.tmpl", data)
+		} else {
+			app.serverError(w, r, err)
+		}
+
+		return
+	}
+
+	app.sessionManager.Put(r.Context(), "flash", "Your signup was successful. Please log in")
+
+	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 }
 
 func (app *application) userLogin(w http.ResponseWriter, r *http.Request) {

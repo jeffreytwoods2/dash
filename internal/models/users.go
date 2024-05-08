@@ -3,6 +3,8 @@ package models
 import (
 	"database/sql"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -10,14 +12,35 @@ type User struct {
 	CreatedAt    time.Time
 	Gamertag     string
 	PasswordHash []byte
-	Java         bool
+	Platform     string
 }
 
 type UserModel struct {
 	DB *sql.DB
 }
 
-func (m *UserModel) Insert(gamertag, password string, java bool) error {
+func (m *UserModel) Insert(gamertag, password string, platform string) error {
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), 12)
+	if err != nil {
+		return err
+	}
+
+	query := `
+		INSERT INTO users (gamertag, password_hash, platform)
+		VALUES ($1, $2, $3)
+	`
+
+	_, err = m.DB.Exec(query, gamertag, passwordHash, platform)
+	if err != nil {
+		switch {
+		case err.Error() == `pq: duplicate key value violates unique constraint "users_gamertag_key"`:
+			return ErrDuplicateGamertag
+		default:
+			return err
+		}
+
+	}
+
 	return nil
 }
 
