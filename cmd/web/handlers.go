@@ -30,9 +30,9 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
-	data := templateData{
-		Players: playerList,
-	}
+	data := app.newTemplateData(r)
+
+	data.Players = playerList
 
 	app.render(w, r, http.StatusOK, "home.tmpl", data)
 }

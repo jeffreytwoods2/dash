@@ -11,9 +11,10 @@ import (
 )
 
 type templateData struct {
-	Players []models.Player
-	Form    any
-	Flash   string
+	Players         []models.Player
+	Form            any
+	Flash           string
+	IsAuthenticated bool
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {
@@ -46,6 +47,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
 
 func (app *application) newTemplateData(r *http.Request) templateData {
 	return templateData{
-		Flash: app.sessionManager.PopString(r.Context(), "flash"),
+		Flash:           app.sessionManager.PopString(r.Context(), "flash"),
+		IsAuthenticated: app.isAuthenticated(r),
 	}
 }
