@@ -2,9 +2,16 @@ function validateBedrock(platform) {
     let gamertag = document.getElementById("gamertag")
     let firstChar = gamertag.value.charAt(0)
     let gamertagField = document.getElementById("gamertag-field")
+    let oldGamertagErr = document.querySelector("#gamertag + .error-label")
+    let oldGamertagInfo = document.getElementById("gamertag-info")
 
-    if (document.getElementById("gamertag-info") !== null) {
-        document.getElementById("gamertag-info").remove()
+
+    if (oldGamertagInfo !== null) {
+        oldGamertagInfo.remove()
+    }
+    if (oldGamertagErr !== null) {
+        oldGamertagErr.remove()
+        gamertag.classList.remove("error-input")
     }
 
     const info = document.createElement("label")

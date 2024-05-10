@@ -47,6 +47,12 @@ func MinChars(value string, n int) bool {
 	return utf8.RuneCountInString(value) >= n
 }
 
+func GamertagFormat(gamertag, platform string) bool {
+	firstChar := gamertag[0]
+
+	return platform == "java" && string(firstChar) != "." || platform == "bedrock" && string(firstChar) == "."
+}
+
 func (v *Validator) AddNonFieldError(message string) {
 	v.NonFieldErrors = append(v.NonFieldErrors, message)
 }

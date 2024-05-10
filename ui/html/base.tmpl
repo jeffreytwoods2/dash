@@ -41,7 +41,7 @@
     <script src="/static/js/main.js" defer></script>
     <script src="/static/js/htmx.min.js" defer></script>
     <script src="/static/js/htmx.ws.js" defer></script>
-    {{template "scripts" .}}
+    {{block "scripts" .}}{{end}}
     <title>Real Ones - {{template "title"}}</title>
   </head>
   <body class="body-dropdown-closed">

@@ -92,7 +92,8 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 
 	form.CheckField(validator.NotBlank(form.Gamertag), "gamertag", "Gamertag must be provided")
 	form.CheckField(validator.MaxChars(form.Gamertag, 16), "gamertag", "Gamertag cannot be more than 16 characters")
-	form.CheckField(validator.PermittedValue(form.Gamertag, wl...), "gamertag", "You are not whitelisted on this server")
+	form.CheckField(validator.GamertagFormat(form.Gamertag, form.Platform), "gamertag", "Bedrock must begin with a dot, and Java must not.")
+	form.CheckField(validator.PermittedValue(form.Gamertag, wl...), "gamertag", "You are not whitelisted on this server. Did you select the correct platform?")
 	form.CheckField(validator.MinChars(form.Password, 8), "password", "Password must be at least 8 characters long")
 	form.CheckField(validator.NotBlank(form.Platform), "platform", "Platform must be provided")
 
@@ -106,7 +107,7 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 	err = app.users.Insert(form.Gamertag, form.Password, form.Platform)
 	if err != nil {
 		if errors.Is(err, models.ErrDuplicateGamertag) {
-			form.AddFieldError("gamertag", "Gamertag already in use")
+			form.AddFieldError("gamertag", "Gamertag already registered")
 			data := app.newTemplateData(r)
 			data.Form = form
 			app.render(w, r, http.StatusUnprocessableEntity, "signup.tmpl", data)
