@@ -2,6 +2,8 @@
 <nav id="dropdown" class="dropdown-closed">
   <a href="#">Account</a>
   <a href="https://mc.jwoods.dev">Live Map</a>
-  <a href="#">Sign out</a>
+  <form action="/user/logout" method="POST">
+    <button type="submit" id="logout-btn">Log out</button>
+  </form>
 </nav>
 {{ end }}

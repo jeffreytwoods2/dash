@@ -117,7 +117,12 @@ main {
   backdrop-filter: blur(12px);
 }
 
-#dropdown a {
+#logout-btn {
+  all: unset;
+  width: 100%;
+}
+
+#dropdown a, #dropdown button {
   display: block;
   padding-block: 20px;
   border-bottom: solid 1px #ffff55;
