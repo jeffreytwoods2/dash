@@ -20,6 +20,11 @@ import (
 	"nhooyr.io/websocket"
 )
 
+type subscriber struct {
+	msgs      chan []byte
+	closeSlow func()
+}
+
 type OnlineRes struct {
 	OnlinePlayers int      `json:"onlinePlayers"`
 	Online        []string `json:"online"`
@@ -186,7 +191,7 @@ func (app *application) subscribe(ctx context.Context, w http.ResponseWriter, r 
 	)
 
 	s := &subscriber{
-		msgs: make(chan []byte, app.subscriberMessageBuffer),
+		msgs: make(chan []byte, app.config.subscriberMessageBuffer),
 		closeSlow: func() {
 			mu.Lock()
 			defer mu.Unlock()

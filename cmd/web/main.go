@@ -19,11 +19,6 @@ import (
 	"mc.jwoods.dev/internal/models"
 )
 
-type subscriber struct {
-	msgs      chan []byte
-	closeSlow func()
-}
-
 type config struct {
 	port int
 	db   struct {
@@ -32,18 +27,18 @@ type config struct {
 		maxIdleConns int
 		maxIdleTime  time.Duration
 	}
+	subscriberMessageBuffer int
 }
 
 type application struct {
-	logger                  *slog.Logger
-	templateCache           map[string]*template.Template
-	subscriberMessageBuffer int
-	subscribersMu           sync.Mutex
-	subscribers             map[*subscriber]struct{}
-	config                  config
-	sessionManager          *scs.SessionManager
-	users                   *models.UserModel
-	formDecoder             *form.Decoder
+	logger         *slog.Logger
+	templateCache  map[string]*template.Template
+	subscribersMu  sync.Mutex
+	subscribers    map[*subscriber]struct{}
+	config         config
+	sessionManager *scs.SessionManager
+	users          *models.UserModel
+	formDecoder    *form.Decoder
 }
 
 func main() {
@@ -56,7 +51,7 @@ func main() {
 	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgreSQL max idle connections")
 	flag.DurationVar(&cfg.db.maxIdleTime, "db-max-idle-time", 15*time.Minute, "PostgreSQL max connection idle time")
 
-	buffer := flag.Int("buffer", 16, "Max number of queued messages for a subscriber")
+	flag.IntVar(&cfg.subscriberMessageBuffer, "buffer", 16, "Max number of queued messages for a subscriber")
 
 	flag.Parse()
 
@@ -85,14 +80,13 @@ func main() {
 	sessionManager.Lifetime = 24 * time.Hour
 
 	app := &application{
-		config:                  cfg,
-		logger:                  logger,
-		templateCache:           templateCache,
-		subscriberMessageBuffer: *buffer,
-		subscribers:             make(map[*subscriber]struct{}),
-		sessionManager:          sessionManager,
-		users:                   &models.UserModel{DB: db},
-		formDecoder:             formDecoder,
+		config:         cfg,
+		logger:         logger,
+		templateCache:  templateCache,
+		subscribers:    make(map[*subscriber]struct{}),
+		sessionManager: sessionManager,
+		users:          &models.UserModel{DB: db},
+		formDecoder:    formDecoder,
 	}
 
 	srv := &http.Server{
