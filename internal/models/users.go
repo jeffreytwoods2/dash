@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -45,7 +46,34 @@ func (m *UserModel) Insert(gamertag, password string, platform string) error {
 }
 
 func (m *UserModel) Authenticate(gamertag, password string) (int, error) {
-	return 0, nil
+	var (
+		id           int
+		passwordHash []byte
+	)
+
+	query := `
+		SELECT id, password_hash FROM users WHERE gamertag = $1
+	`
+
+	err := m.DB.QueryRow(query, gamertag).Scan(&id, &passwordHash)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return 0, ErrInvalidCredentials
+		} else {
+			return 0, err
+		}
+	}
+
+	err = bcrypt.CompareHashAndPassword(passwordHash, []byte(password))
+	if err != nil {
+		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+			return 0, ErrInvalidCredentials
+		} else {
+			return 0, err
+		}
+	}
+
+	return id, nil
 }
 
 func (m *UserModel) Exists(id int) (bool, error) {

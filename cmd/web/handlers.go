@@ -97,10 +97,6 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if form.Platform == "bedrock" {
-		form.Gamertag = fmt.Sprintf(".%s", form.Gamertag)
-	}
-
 	err = app.users.Insert(form.Gamertag, form.Password, form.Platform)
 	if err != nil {
 		if errors.Is(err, models.ErrDuplicateGamertag) {
@@ -127,7 +123,47 @@ func (app *application) userLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Authenticate and login the user...")
+	var form userLoginForm
+
+	err := app.decodePostForm(r, &form)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	form.CheckField(validator.NotBlank(form.Gamertag), "gamertag", "Please enter your gamertag")
+	form.CheckField(validator.NotBlank(form.Password), "password", "Please enter your password")
+
+	if !form.Valid() {
+		data := app.newTemplateData(r)
+		data.Form = form
+		app.render(w, r, http.StatusUnprocessableEntity, "login.tmpl", data)
+		return
+	}
+
+	id, err := app.users.Authenticate(form.Gamertag, form.Password)
+	if err != nil {
+		if errors.Is(err, models.ErrInvalidCredentials) {
+			form.AddNonFieldError("Gamertag or password is incorrect")
+
+			data := app.newTemplateData(r)
+			data.Form = form
+			app.render(w, r, http.StatusUnprocessableEntity, "login.tmpl", data)
+		} else {
+			app.serverError(w, r, err)
+		}
+		return
+	}
+
+	err = app.sessionManager.RenewToken(r.Context())
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	app.sessionManager.Put(r.Context(), "authenticatedUserID", id)
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func (app *application) userLogoutPost(w http.ResponseWriter, r *http.Request) {

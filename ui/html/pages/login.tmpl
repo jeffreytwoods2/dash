@@ -2,6 +2,9 @@
 
 {{define "page"}}
 <form action="/user/login" method="POST" id="signup-form">
+    {{range .Form.NonFieldErrors}}
+        <div class="error-label">{{.}}</div>
+    {{end}}
     <div class="form-field">
         <label for="gamertag">Gamertag</label>
         <input type="text" id="gamertag" name="gamertag" value='{{.Form.Gamertag}}' {{if .Form.FieldErrors.gamertag}}class="error-input"{{end}}>
