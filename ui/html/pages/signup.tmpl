@@ -1,8 +1,12 @@
+{{define "scripts"}}
+<script src="/static/js/signup.js" defer></script>
+{{end}}
+
 {{define "title"}}Sign up{{end}}
 
 {{define "page"}}
 <form action="/user/signup" method="POST" id="signup-form">
-    <div class="form-field">
+    <div class="form-field" id="gamertag-field">
         <label for="gamertag">Gamertag</label>
         <input type="text" id="gamertag" name="gamertag" value='{{.Form.Gamertag}}' {{if .Form.FieldErrors.gamertag}}class="error-input"{{end}}>
         {{with .Form.FieldErrors.gamertag}}
@@ -16,9 +20,9 @@
             <label class="error-label">{{.}}</label>
         {{end}}
     </div>
-    <div class="form-field">
+    <div class="form-field" id="platform-field">
         <label for="platform">Platform</label>
-        <select id="platform" name="platform" form="signup-form" {{if .Form.FieldErrors.platform}}class="error-input"{{end}}>
+        <select id="platform" name="platform" form="signup-form" onchange="validateBedrock(this.value)" {{if .Form.FieldErrors.platform}}class="error-input"{{end}}>
             <option value="" disabled {{if not .Form.Platform}}selected{{end}}>Choose one...</option>
             <option value="java" {{if (eq .Form.Platform "java" )}}selected{{end}}>Java</option>
             <option value="bedrock" {{if (eq .Form.Platform "bedrock" )}}selected{{end}}>Bedrock (Xbox, iPad, etc.)</option>
@@ -27,7 +31,6 @@
             <label class="error-label">{{.}}</label>
         {{end}}
     </div>
-
     <button type="submit" id="signup-btn">Sign up</button>
 </form>
 {{end}}

@@ -289,3 +289,21 @@ func (app *application) decodePostForm(r *http.Request, dst any) error {
 func (app *application) isAuthenticated(r *http.Request) bool {
 	return app.sessionManager.Exists(r.Context(), "authenticatedUserID")
 }
+
+func getWhitelist() ([]string, error) {
+	type whitelist struct {
+		Players []string `json:"players"`
+	}
+	wl := whitelist{}
+	list, err := sendRcon("whitelist")
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(list, &wl)
+	if err != nil {
+		return nil, err
+	}
+
+	return wl.Players, nil
+}

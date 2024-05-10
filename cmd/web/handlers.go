@@ -85,10 +85,16 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	wl, err := getWhitelist()
+	if err != nil {
+		app.serverError(w, r, err)
+	}
+
 	form.CheckField(validator.NotBlank(form.Gamertag), "gamertag", "Gamertag must be provided")
 	form.CheckField(validator.MaxChars(form.Gamertag, 16), "gamertag", "Gamertag cannot be more than 16 characters")
-	form.CheckField(validator.NotBlank(form.Platform), "platform", "Platform must be provided")
+	form.CheckField(validator.PermittedValue(form.Gamertag, wl...), "gamertag", "You are not whitelisted on this server")
 	form.CheckField(validator.MinChars(form.Password, 8), "password", "Password must be at least 8 characters long")
+	form.CheckField(validator.NotBlank(form.Platform), "platform", "Platform must be provided")
 
 	if !form.Valid() {
 		data := app.newTemplateData(r)
