@@ -99,7 +99,7 @@ func (app *application) renderOnline() {
 }
 
 func sendRcon(endpoint string) ([]byte, error) {
-	url := fmt.Sprintf("http://mc.jwoods.dev:8000/api/v1/%s", endpoint)
+	url := fmt.Sprintf("http://129.146.33.187:8000/api/v1/%s", endpoint)
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("Authorization", "ODk1NDE0MzgwNDI5MDc0MjczMDA")
 	client := &http.Client{}

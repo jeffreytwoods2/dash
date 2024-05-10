@@ -97,6 +97,10 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if form.Platform == "bedrock" {
+		form.Gamertag = fmt.Sprintf(".%s", form.Gamertag)
+	}
+
 	err = app.users.Insert(form.Gamertag, form.Password, form.Platform)
 	if err != nil {
 		if errors.Is(err, models.ErrDuplicateGamertag) {
