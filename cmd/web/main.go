@@ -98,7 +98,7 @@ func main() {
 	go func() {
 		for {
 			if len(app.subscribers) > 0 {
-				time.Sleep(2 * time.Second)
+				time.Sleep(1 * time.Second)
 
 				app.renderOnline()
 			}

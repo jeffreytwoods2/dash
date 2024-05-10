@@ -4,11 +4,17 @@
     <p class="widget-title">Online</p>
   </div>
   <div class="widget-content-box">
+    {{if .IsAuthenticated}}
     <div id="online-content" hx-ext="ws" ws-connect="/subscribe">
       <div id="ws-wrapper">
         {{ template "players" .}}
       </div>
     </div>
+    {{else}}
+    <div id="online-content">
+      <p id="no-one">Log in to see players</p>
+    </div>
+    {{end}}
   </div>
 </div>
-{{ end }}
+{{end}}

@@ -7,7 +7,6 @@ function toggleDropdown() {
 
 window.onload = () => {
     let menu = document.getElementById("menu")
-    let dropdownLinks = document.querySelectorAll("#dropdown a")
 
     menu.addEventListener("click", toggleDropdown)
 }
