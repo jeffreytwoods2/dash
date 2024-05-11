@@ -23,6 +23,7 @@ import (
 var version = vcs.Version()
 
 type config struct {
+	env  string
 	port int
 	db   struct {
 		dsn          string
@@ -47,6 +48,7 @@ type application struct {
 func main() {
 	cfg := config{}
 
+	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
 	flag.IntVar(&cfg.port, "port", 5001, "HTTP network address")
 
 	flag.StringVar(&cfg.db.dsn, "db-dsn", "", "PostgreSQL DSN")

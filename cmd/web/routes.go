@@ -12,6 +12,7 @@ func (app *application) routes() http.Handler {
 
 	fileServer := http.FileServer(http.FS(ui.Files))
 	mux.Handle("GET /static/", fileServer)
+	mux.HandleFunc("GET /healthcheck", app.healthcheckHandler)
 
 	dynamic := alice.New(app.sessionManager.LoadAndSave)
 
@@ -21,7 +22,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /user/login", dynamic.ThenFunc(app.userLogin))
 	mux.Handle("POST /user/login", dynamic.ThenFunc(app.userLoginPost))
 
-	protected :=  dynamic.Append(app.requireAuthentication)
+	protected := dynamic.Append(app.requireAuthentication)
 
 	mux.Handle("GET /subscribe", protected.ThenFunc(app.subscribeHandler))
 	mux.Handle("POST /user/logout", protected.ThenFunc(app.userLogoutPost))
