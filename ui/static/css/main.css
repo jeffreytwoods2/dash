@@ -41,18 +41,17 @@ a {
 header {
   border-bottom: solid 1px black;
   width: 100%;
-  height: 60px;
   background-color: #5b8b32;
   background-image: url("/static/img/grass.jpeg");
   background-size: cover;
   box-shadow: 0 1px 3px black;
-  z-index: 1;
+  z-index: 2;
   text-shadow: 2px 2px 4px #000000;
   position: sticky;
-  padding-top: env(safe-area-inset-top);
 }
 
 #header-content {
+  margin-block-start: env(safe-area-inset-bottom);
   display: flex;
 }
 
@@ -103,7 +102,7 @@ main {
   position: fixed;
   justify-content: top;
   gap: 20px;
-  top: calc(60px + env(safe-area-inset-top));
+  top: calc(60px + env(safe-area-inset-bottom));
   right: 0;
   width: 100vw;
   z-index: 1;
@@ -113,8 +112,8 @@ main {
   font-size: 2.5em;
   box-sizing: border-box;
   padding: 0 20px 20px 20px;
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
 }
 
 #logout-btn {
@@ -246,9 +245,10 @@ main {
 }
 /* End map component */
 
-/* Signup widget */
+/* Auth forms */
 #signup-form {
   color: #ffff55;
+  text-shadow: 2px 2px 4px black;
 }
 
 .form-field {
@@ -280,15 +280,21 @@ main {
 #signup-btn {
   all: unset;
   margin-block-start: 3rem;
-  background-color: #ffff55;
-  color: black;
-  border: solid 1px #ffff55;
+  /* background-color: #ffff55; */
+  background-color: #8b8b8b;
+  background-image: url("/static/img/stone.png");
+  color: #ffff55;
+  /* color: #ffff55; */
+  /* border: solid 2px #ffff55; */
   border-radius: 1rem;
   padding: 0.5rem;
   width: 100%;
   box-sizing: border-box;
   text-align: center;
-  font-size: 1.5em;
+  font-size: 1.75em;
+  /* box-shadow: 0 1px 3px black; */
+  box-shadow: 4px 4px 3px black;
+  text-shadow: 2px 2px 4px black;
 }
 
 .error-input {
@@ -301,7 +307,12 @@ main {
   font-size: 0.9em;
   margin-block-start: 0.1em;
 }
-/* End signup widget */
+
+#login-flash {
+  color: orangered;
+}
+
+/* End auth forms */
 
 /* End widgets */
 

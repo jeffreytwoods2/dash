@@ -48,9 +48,14 @@ func MinChars(value string, n int) bool {
 }
 
 func GamertagFormat(gamertag, platform string) bool {
-	firstChar := gamertag[0]
+	var firstChar string
+	if gamertag != "" {
+		firstChar = string(gamertag[0])
+	} else {
+		firstChar = ""
+	}
 
-	return platform == "java" && string(firstChar) != "." || platform == "bedrock" && string(firstChar) == "."
+	return platform == "java" && firstChar != "." || platform == "bedrock" && firstChar == "."
 }
 
 func (v *Validator) AddNonFieldError(message string) {

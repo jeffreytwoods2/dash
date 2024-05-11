@@ -3,7 +3,9 @@
 {{define "page"}}
 <form action="/user/login" method="POST" id="signup-form">
     {{range .Form.NonFieldErrors}}
-        <div class="error-label">{{.}}</div>
+        <div class="flash">
+            <p class="flash-title" id="login-flash">{{.}}</p>
+        </div>
     {{end}}
     <div class="form-field">
         <label for="gamertag">Gamertag</label>
