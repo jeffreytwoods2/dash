@@ -17,7 +17,10 @@ import (
 	"github.com/go-playground/form/v4"
 	_ "github.com/lib/pq"
 	"mc.jwoods.dev/internal/models"
+	"mc.jwoods.dev/internal/vcs"
 )
+
+var version = vcs.Version()
 
 type config struct {
 	port int
@@ -53,7 +56,14 @@ func main() {
 
 	flag.IntVar(&cfg.subscriberMessageBuffer, "buffer", 16, "Max number of queued messages for a subscriber")
 
+	displayVersion := flag.Bool("version", false, "Display version and exit")
+
 	flag.Parse()
+
+	if *displayVersion {
+		fmt.Printf("Version:\t%s\n", version)
+		os.Exit(0)
+	}
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
