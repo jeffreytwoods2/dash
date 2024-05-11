@@ -31,6 +31,10 @@ type config struct {
 		maxIdleConns int
 		maxIdleTime  time.Duration
 	}
+	serviceWorker struct {
+		staticDir      string
+		staticFileList []string
+	}
 	subscriberMessageBuffer int
 }
 
@@ -50,16 +54,13 @@ func main() {
 
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
 	flag.IntVar(&cfg.port, "port", 5001, "HTTP network address")
-
+	flag.StringVar(&cfg.serviceWorker.staticDir, "static-dir", os.Getenv("STATIC_DIR"), "Path to the ui/static directory")
 	flag.StringVar(&cfg.db.dsn, "db-dsn", "", "PostgreSQL DSN")
 	flag.IntVar(&cfg.db.maxOpenConns, "db-max-open-conns", 25, "PostgreSQL max open connections")
 	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgreSQL max idle connections")
 	flag.DurationVar(&cfg.db.maxIdleTime, "db-max-idle-time", 15*time.Minute, "PostgreSQL max connection idle time")
-
 	flag.IntVar(&cfg.subscriberMessageBuffer, "buffer", 16, "Max number of queued messages for a subscriber")
-
 	displayVersion := flag.Bool("version", false, "Display version and exit")
-
 	flag.Parse()
 
 	if *displayVersion {
@@ -68,6 +69,12 @@ func main() {
 	}
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+
+	err := cfg.buildStaticFileList()
+	if err != nil {
+		logger.Error(err.Error())
+		os.Exit(1)
+	}
 
 	db, err := openDB(cfg)
 	if err != nil {

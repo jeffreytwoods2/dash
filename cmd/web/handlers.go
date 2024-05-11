@@ -24,6 +24,18 @@ type userLoginForm struct {
 	validator.Validator `form:"-"`
 }
 
+func (app *application) serviceWorkerStats(w http.ResponseWriter, r *http.Request) {
+	env := envelope{
+		"static_files": app.config.serviceWorker.staticFileList,
+		"version":      version,
+	}
+
+	err := app.writeJSON(w, http.StatusOK, env, nil)
+	if err != nil {
+		app.serverError(w, r, err)
+	}
+}
+
 func (app *application) healthcheckHandler(w http.ResponseWriter, r *http.Request) {
 	env := envelope{
 		"status": "available",

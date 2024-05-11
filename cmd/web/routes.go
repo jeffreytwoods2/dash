@@ -11,8 +11,10 @@ func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 
 	fileServer := http.FileServer(http.FS(ui.Files))
+
 	mux.Handle("GET /static/", fileServer)
 	mux.HandleFunc("GET /healthcheck", app.healthcheckHandler)
+	mux.HandleFunc("GET /sw", app.serviceWorkerStats)
 
 	dynamic := alice.New(app.sessionManager.LoadAndSave)
 

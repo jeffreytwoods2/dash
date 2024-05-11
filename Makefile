@@ -14,10 +14,16 @@ help:
 # DEVELOPMENT
 # ==================================================================================== #
 
-## run/web: run the cmd/web application
+## run/web: run the development server
 .PHONY: run/web
 run/web:
 	@go run ./cmd/web -port=4000 -db-dsn=${DASH_DB_DSN}
+
+## run/prod: run the production server
+.PHONY: run/prod
+run/prod:
+	@echo 'Starting production server...'
+	@./bin/web -port=4000 -db-dsn=${DASH_DB_DSN} -env=production
 
 # ==================================================================================== #
 # BUILD
