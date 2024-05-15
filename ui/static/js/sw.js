@@ -1,7 +1,7 @@
-const CACHE_INFO = fetch("http://localhost:4000/sw").then((res) => {
+const CACHE_INFO = fetch("https://dash.jwoods.dev/sw").then((res) => {
     return res.json()
 })
-// console.log("CACHE_INFO: ", CACHE_INFO)
+console.log("CACHE_INFO: ", CACHE_INFO)
 
 self.addEventListener("install", async (e) => {
     await CACHE_INFO
