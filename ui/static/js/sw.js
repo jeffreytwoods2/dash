@@ -1,13 +1,9 @@
-const CACHE_INFO = fetch("https://dash.jwoods.dev/sw").then((res) => {
-    return res.json()
-})
-console.log("CACHE_INFO: ", CACHE_INFO)
-
-self.addEventListener("install", async (e) => {
-    await CACHE_INFO
+self.addEventListener("install", (e) => {
     async function addFilesToCache() {
-        const cache = await caches.open(CACHE_INFO.version)
-        await cache.addAll(...CACHE_INFO.static_files)
+        const res = await fetch("https://dash.jwoods.dev/sw")
+        const cacheInfo = await res.json()
+        const cache = await caches.open(cacheInfo.version)
+        await cache.addAll(cacheInfo.static_files)
     }
 
     try {
@@ -16,3 +12,15 @@ self.addEventListener("install", async (e) => {
         console.log(err)
     }
 })
+
+self.addEventListener('activate', (e) => {
+	async function deleteOldCaches() {
+        const res = await fetch("https://dash.jwoods.dev/sw")
+        const cacheInfo = await res.json()
+		for (const key of await caches.keys()) {
+			if (key !== cacheInfo.version) await caches.delete(key);
+		}
+	}
+
+	e.waitUntil(deleteOldCaches());
+});
