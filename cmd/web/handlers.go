@@ -52,7 +52,7 @@ func (app *application) healthcheckHandler(w http.ResponseWriter, r *http.Reques
 }
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
-	playerList, err := getPlayerCoords()
+	playerList, err := app.getPlayerCoords()
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -112,7 +112,7 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	wl, err := getWhitelist()
+	wl, err := app.getWhitelist()
 	if err != nil {
 		app.serverError(w, r, err)
 	}

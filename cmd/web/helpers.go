@@ -97,7 +97,7 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, status in
 }
 
 func (app *application) renderOnline() {
-	players, err := getPlayerCoords()
+	players, err := app.getPlayerCoords()
 	if err != nil {
 		app.logger.Error(err.Error())
 		return
@@ -124,10 +124,10 @@ func (app *application) renderOnline() {
 	app.publish(buf.Bytes())
 }
 
-func sendRcon(endpoint string) ([]byte, error) {
+func (app *application) sendRcon(endpoint string) ([]byte, error) {
 	url := fmt.Sprintf("http://129.146.33.187:8000/api/v1/%s", endpoint)
 	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("Authorization", "ODk1NDE0MzgwNDI5MDc0MjczMDA")
+	req.Header.Add("Authorization", app.config.rconKey)
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -140,8 +140,8 @@ func sendRcon(endpoint string) ([]byte, error) {
 	return body, nil
 }
 
-func getPlayers() ([]string, error) {
-	getPlayers, err := sendRcon("players/online")
+func (app *application) getPlayers() ([]string, error) {
+	getPlayers, err := app.sendRcon("players/online")
 	if err != nil {
 		return nil, err
 	}
@@ -153,9 +153,9 @@ func getPlayers() ([]string, error) {
 	return target.Online, nil
 }
 
-func getPlayerCoords() ([]models.Player, error) {
+func (app *application) getPlayerCoords() ([]models.Player, error) {
 	var players []models.Player
-	playerList, err := getPlayers()
+	playerList, err := app.getPlayers()
 	if err != nil {
 		return nil, err
 	}
@@ -163,13 +163,13 @@ func getPlayerCoords() ([]models.Player, error) {
 	for _, player := range playerList {
 		var currPlayer models.Player
 		endpoint := fmt.Sprintf("players/%s/location", player)
-		rawLocation, err := sendRcon(endpoint)
+		rawLocation, err := app.sendRcon(endpoint)
 		if err != nil {
 			return nil, err
 		}
 
 		endpoint = fmt.Sprintf("players/%s/world", player)
-		rawWorld, err := sendRcon(endpoint)
+		rawWorld, err := app.sendRcon(endpoint)
 		if err != nil {
 			return nil, err
 		}
@@ -311,12 +311,12 @@ func (app *application) isAuthenticated(r *http.Request) bool {
 	return app.sessionManager.Exists(r.Context(), "authenticatedUserID")
 }
 
-func getWhitelist() ([]string, error) {
+func (app *application) getWhitelist() ([]string, error) {
 	type whitelist struct {
 		Players []string `json:"players"`
 	}
 	wl := whitelist{}
-	list, err := sendRcon("whitelist")
+	list, err := app.sendRcon("whitelist")
 	if err != nil {
 		return nil, err
 	}
