@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 
 	"mc.jwoods.dev/internal/models"
@@ -52,14 +51,7 @@ func (app *application) healthcheckHandler(w http.ResponseWriter, r *http.Reques
 }
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
-	playerList, err := app.getPlayerCoords()
-	if err != nil {
-		fmt.Println(err)
-	}
-
 	data := app.newTemplateData(r)
-
-	data.Players = playerList
 
 	app.render(w, r, http.StatusOK, "home.tmpl", data)
 }

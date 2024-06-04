@@ -111,9 +111,11 @@ func main() {
 	}
 
 	srv := &http.Server{
-		Addr:     fmt.Sprintf(":%d", app.config.port),
-		Handler:  app.routes(),
-		ErrorLog: slog.NewLogLogger(logger.Handler(), slog.LevelError),
+		Addr:         fmt.Sprintf(":%d", app.config.port),
+		Handler:      app.routes(),
+		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError),
+		ReadTimeout:  3 * time.Second,
+		WriteTimeout: 3 * time.Second,
 	}
 
 	go func() {

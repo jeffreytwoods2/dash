@@ -10,6 +10,10 @@ help:
 	@echo 'Usage:'
 	@sed -n 's/^##//p' ${MAKEFILE_LIST} | column -t -s ':' |  sed -e 's/^/ /'
 
+.PHONY: confirm
+confirm:
+	@echo -n 'Are you sure? [y/N] ' && read ans && [ $${ans:-N} = y ]
+
 # ==================================================================================== #
 # DEVELOPMENT
 # ==================================================================================== #
@@ -19,11 +23,23 @@ help:
 run/web:
 	@go run ./cmd/web -port=4000 -db-dsn=${DASH_DB_DSN}
 
-## run/prod: run the production server
-.PHONY: run/prod
-run/prod:
-	@echo 'Starting production server...'
-	@./bin/web -port=4000 -db-dsn=${DASH_DB_DSN} -env=production
+## db/new name=$1: create a new database migration
+.PHONY: db/new
+db/new:
+	@echo 'Creating migration files for ${name}...'
+	@migrate create -seq -ext=.sql -dir=./migrations ${name}
+
+## db/up: apply all up database migrations
+.PHONY: db/up
+db/up: confirm
+	@echo 'Running up migrations...'
+	@migrate -path ./migrations -database ${DASH_DB_DSN} up
+
+## db/down: apply all down database migrations
+.PHONY: db/down
+db/down:
+	@echo 'Running down migrations...'
+	@migrate -path ./migrations -database ${DASH_DB_DSN} down
 
 # ==================================================================================== #
 # BUILD

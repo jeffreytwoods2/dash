@@ -7,7 +7,7 @@
     {{if .IsAuthenticated}}
     <div id="online-content" hx-ext="ws" ws-connect="/subscribe">
       <div id="ws-wrapper">
-        {{ template "players" .}}
+        <p id="no-one">Retrieving players...</p>
       </div>
     </div>
     {{else}}
