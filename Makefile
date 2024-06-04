@@ -23,6 +23,11 @@ confirm:
 run/web:
 	@go run ./cmd/web -port=4000 -db-dsn=${DASH_DB_DSN}
 
+## run/prod: run the production server locally
+.PHONY: run/prod
+run/prod:
+	@./bin/web -port=4000 -db-dsn=${DASH_DB_DSN} -env=production
+
 ## db/new name=$1: create a new database migration
 .PHONY: db/new
 db/new:

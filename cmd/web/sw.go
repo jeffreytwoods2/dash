@@ -16,7 +16,6 @@ func (cfg *config) buildStaticFileList() error {
 			if !info.IsDir() {
 				short_filepath := path[len_path_prefix:]
 				uri := fmt.Sprintf("https://dash.jwoods.dev/static%s", short_filepath)
-				// uri := fmt.Sprintf("http://localhost:9090/static%s", short_filepath)
 				cfg.serviceWorker.staticFileList = append(cfg.serviceWorker.staticFileList, uri)
 			}
 			return nil
