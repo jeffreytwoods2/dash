@@ -2,6 +2,7 @@
 
 {{define "page"}}
 <form action="/user/login" method="POST" id="signup-form">
+    <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
     {{range .Form.NonFieldErrors}}
         <div class="flash">
             <p class="flash-title" id="login-flash">{{.}}</p>

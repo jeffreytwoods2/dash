@@ -11,6 +11,8 @@ import (
 	"math"
 	"net"
 	"net/http"
+	"os"
+	"path/filepath"
 	"sync"
 	"time"
 
@@ -125,7 +127,7 @@ func (app *application) renderOnline() {
 }
 
 func (app *application) sendRcon(endpoint string) ([]byte, error) {
-	url := fmt.Sprintf("http://141.148.153.73:8000/api/v1/%s", endpoint)
+	url := fmt.Sprintf("http://localhost:8000/api/v1/%s", endpoint)
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("Authorization", app.config.rconKey)
 	client := &http.Client{}
@@ -327,4 +329,22 @@ func (app *application) getWhitelist() ([]string, error) {
 	}
 
 	return wl.Players, nil
+}
+
+func (cfg *config) buildStaticFileList() error {
+	len_path_prefix := len(cfg.serviceWorker.staticDir)
+	err := filepath.Walk(cfg.serviceWorker.staticDir,
+		func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if !info.IsDir() {
+				short_filepath := path[len_path_prefix:]
+				uri := fmt.Sprintf("https://dash.jwoods.dev/static%s", short_filepath)
+				cfg.serviceWorker.staticFileList = append(cfg.serviceWorker.staticFileList, uri)
+			}
+			return nil
+		})
+
+	return err
 }

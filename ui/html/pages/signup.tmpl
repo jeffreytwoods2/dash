@@ -6,6 +6,7 @@
 
 {{define "page"}}
 <form action="/user/signup" method="POST" id="signup-form">
+    <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
     <div class="form-field" id="gamertag-field">
         <label for="gamertag">Gamertag</label>
         <input type="text" id="gamertag" name="gamertag" value='{{.Form.Gamertag}}' {{if .Form.FieldErrors.gamertag}}class="error-input"{{end}}>

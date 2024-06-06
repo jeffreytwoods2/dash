@@ -107,6 +107,7 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 	wl, err := app.getWhitelist()
 	if err != nil {
 		app.serverError(w, r, err)
+		return
 	}
 
 	form.CheckField(validator.NotBlank(form.Gamertag), "gamertag", "Gamertag must be provided")
