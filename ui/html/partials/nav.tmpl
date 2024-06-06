@@ -3,6 +3,7 @@
   {{if .IsAuthenticated}}
     <a href="#">Account</a>
     <form action="/user/logout" method="POST">
+      <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
       <button type="submit" id="logout-btn">Log out</button>
     </form>
   {{else}}
