@@ -1,7 +1,7 @@
 {
     "short_name": "Real Ones",
     "name": "Real Ones MC Server",
-    "start_url": "/",
+    "start_url": "https://dash.jwoods.dev",
     "icons": [
       {
         "src": "/static/favicons/favicon.ico",

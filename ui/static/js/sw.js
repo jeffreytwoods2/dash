@@ -26,7 +26,7 @@ self.addEventListener('activate', (e) => {
 	}
 
 	e.waitUntil(deleteOldCaches());
-    return self.clients.claim()
+    self.clients.claim()
 });
 
 self.addEventListener('fetch', (e) => {
@@ -43,6 +43,9 @@ self.addEventListener('fetch', (e) => {
             if (response) {
                 return response
             }
+        } else {
+            const response = await fetch(e.request)
+            return response
         }
 
         // Keeping this boilerplate in case I want to cache certain

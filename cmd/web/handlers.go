@@ -205,3 +205,7 @@ func (app *application) userLogoutPost(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 }
+
+func (app *application) serviceWorker(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "/home/ubuntu/dash/ui/static/js/sw.js")
+}

@@ -16,6 +16,9 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("GET /healthcheck", app.healthcheckHandler)
 	mux.HandleFunc("GET /sw", app.serviceWorkerStats)
 
+	// TODO: Handle this in Caddy or Cloudflare instead in the future
+	mux.HandleFunc("GET /serviceworker", app.serviceWorker)
+
 	dynamic := alice.New(app.sessionManager.LoadAndSave, noSurf)
 
 	mux.Handle("GET /{$}", dynamic.ThenFunc(app.home))
