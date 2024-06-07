@@ -79,3 +79,24 @@ func (m *UserModel) Authenticate(gamertag, password string) (int, error) {
 func (m *UserModel) Exists(id int) (bool, error) {
 	return false, nil
 }
+
+func (m *UserModel) GetGamertagByID(id int) (string, error) {
+	var (
+		gamertag string
+	)
+
+	query := `
+		SELECT gamertag FROM users WHERE id = $1
+	`
+
+	err := m.DB.QueryRow(query, id).Scan(&gamertag)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return "", ErrNoRecord
+		} else {
+			return "", err
+		}
+	}
+
+	return gamertag, nil
+}

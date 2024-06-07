@@ -16,3 +16,5 @@ require (
 )
 
 require github.com/justinas/nosurf v1.1.1
+
+require github.com/gorcon/rcon v1.3.5

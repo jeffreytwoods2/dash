@@ -32,6 +32,7 @@ type config struct {
 		maxIdleTime  time.Duration
 	}
 	rconKey       string
+	rconPwd       string
 	serviceWorker struct {
 		staticDir      string
 		staticFileList []string
@@ -61,6 +62,7 @@ func main() {
 	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgreSQL max idle connections")
 	flag.DurationVar(&cfg.db.maxIdleTime, "db-max-idle-time", 15*time.Minute, "PostgreSQL max connection idle time")
 	flag.StringVar(&cfg.rconKey, "rcon-key", os.Getenv("RCON_KEY"), "Authorization key for server RCON endpoints")
+	flag.StringVar(&cfg.rconPwd, "rcon-pwd", os.Getenv("RCON_PASSWORD"), "Password for server RCON on port 25575")
 	flag.IntVar(&cfg.subscriberMessageBuffer, "buffer", 16, "Max number of queued messages for a subscriber")
 	displayVersion := flag.Bool("version", false, "Display version and exit")
 	flag.Parse()
