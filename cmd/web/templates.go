@@ -11,8 +11,43 @@ import (
 	"mc.jwoods.dev/ui"
 )
 
+type disc struct {
+	Title     string
+	Artist    string
+	Namespace string
+}
+
+var discs = []disc{
+	{
+		Title:     "My Nigga",
+		Artist:    "YG",
+		Namespace: "myniggaygone",
+	},
+	{
+		Title:     "Easy",
+		Artist:    "Lionel Richie",
+		Namespace: "easylionelrichietwo",
+	},
+	{
+		Title:     "The Gutter",
+		Artist:    "Ice Cube",
+		Namespace: "theguttericecubethree",
+	},
+	{
+		Title:     "Sexual Healing",
+		Artist:    "Marvin Gaye",
+		Namespace: "sexualhealingmarvingayefour",
+	},
+	{
+		Title:     "Island Girl",
+		Artist:    "Surf Collective",
+		Namespace: "islandgirlsurfcollectivefive",
+	},
+}
+
 type templateData struct {
 	Players         []models.Player
+	Discs           []disc
 	Form            any
 	Flash           string
 	IsAuthenticated bool
@@ -49,6 +84,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
 
 func (app *application) newTemplateData(r *http.Request) templateData {
 	return templateData{
+		Discs:           discs,
 		Flash:           app.sessionManager.PopString(r.Context(), "flash"),
 		IsAuthenticated: app.isAuthenticated(r),
 		CSRFToken:       nosurf.Token(r),

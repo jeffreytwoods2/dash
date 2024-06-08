@@ -1,0 +1,15 @@
+{{define "song"}}
+<div class="song" hx-post="/givedisc/{{.Namespace}}" hx-swap="none" hx-include="#csrf_token">
+    <div class="song-info">
+        <p class="song-title">{{.Title}}</p>
+        <p class="song-artist">{{.Artist}}</p>
+    </div>
+    <img
+      src="/static/img/cat-disc.png"
+      id="music-disc"
+      alt="Green music disc"
+      width="50"
+      height="50"
+    />
+</div>
+{{end}}

@@ -213,36 +213,25 @@ func (app *application) serviceWorker(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) giveDisc(w http.ResponseWriter, r *http.Request) {
-	// id := app.sessionManager.GetInt(r.Context(), "authenticatedUserID")
-	id := 1
+	id := app.sessionManager.GetInt(r.Context(), "authenticatedUserID")
 	tag, err := app.users.GetGamertagByID(id)
 	if err != nil {
 		app.serverError(w, r, err)
 		return
 	}
-
-	err = r.ParseForm()
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	disc := r.PostForm.Get("disc")
-
+	disc := r.PathValue("disc")
 	cmd := fmt.Sprintf("discgive %s %s", tag, disc)
-	fmt.Printf("command: %s\n", cmd)
 
-	conn, err := rcon.Dial("141.148.153.73:25575", app.config.rconPwd)
+	conn, err := rcon.Dial(app.config.rconAddr, app.config.rconPwd)
 	if err != nil {
 		app.serverError(w, r, err)
 		return
 	}
 	defer conn.Close()
 
-	response, err := conn.Execute("list")
+	_, err = conn.Execute(cmd)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-
-	fmt.Printf("rcon response: %s\n", response)
 }

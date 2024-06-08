@@ -15,7 +15,6 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /static/", fileServer)
 	mux.HandleFunc("GET /healthcheck", app.healthcheckHandler)
 	mux.HandleFunc("GET /sw", app.serviceWorkerStats)
-	mux.HandleFunc("POST /givedisc", app.giveDisc)
 
 	// TODO: Handle this in Caddy or Cloudflare instead in the future
 	mux.HandleFunc("GET /serviceworker", app.serviceWorker)
@@ -32,7 +31,7 @@ func (app *application) routes() http.Handler {
 
 	mux.Handle("GET /subscribe", protected.ThenFunc(app.subscribeHandler))
 	mux.Handle("POST /user/logout", protected.ThenFunc(app.userLogoutPost))
-	// mux.Handle("POST /givedisc", protected.ThenFunc(app.giveDisc))
+	mux.Handle("POST /givedisc/{disc}", protected.ThenFunc(app.giveDisc))
 
 	standard := alice.New(app.recoverPanic, commonHeaders)
 	return standard.Then(mux)
