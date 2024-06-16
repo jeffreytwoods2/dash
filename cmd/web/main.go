@@ -102,7 +102,7 @@ func main() {
 
 	sessionManager := scs.New()
 	sessionManager.Store = postgresstore.New(db)
-	sessionManager.Lifetime = 24 * time.Hour
+	sessionManager.Lifetime = 24 * 365 * time.Hour
 
 	app := &application{
 		config:         cfg,

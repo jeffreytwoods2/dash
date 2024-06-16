@@ -216,6 +216,7 @@ main {
 /* Music component */
 .music-widget {
   max-height: 50vh;
+  padding-bottom: 1.5em;
 }
 
 .music-widget-content {
@@ -225,6 +226,36 @@ main {
 #music-disc {
   display: block;
   margin: auto;
+}
+
+.song {
+  display: flex;
+  width: 100%;
+  border: solid 0.4em rgb(85, 85, 85);
+  border-radius: 4px;
+  background-color: rgb(33, 33, 33);
+  box-sizing: border-box;
+  padding-block: 0.75em;
+  margin-block-end: 1em;
+  margin-inline: 1.5em;
+}
+
+.song-info {
+  flex-grow: 1;
+  color: #ffff55;
+  margin: 0;
+}
+
+.song-title {
+  margin: 0;
+  margin-inline-start: 0.4rem;
+  font-size: 1.5em;
+}
+
+.song-artist {
+  margin: 0;
+  margin-inline-start: 0.4rem;
+  font-size: 1em;
 }
 
 #under-construction {
@@ -337,36 +368,6 @@ main {
   color: #ffff55;
   text-align: center;
   margin: 0;
-}
-
-.song {
-  display: flex;
-  width: 100%;
-  border: solid 0.4em rgb(85, 85, 85);
-  border-radius: 4px;
-  background-color: rgb(33, 33, 33);
-  box-sizing: border-box;
-  padding-block: 0.75em;
-  margin-block: 0.75em;
-  margin-inline: 1.5em;
-}
-
-.song-info {
-  flex-grow: 1;
-  color: #ffff55;
-  margin: 0;
-}
-
-.song-title {
-  margin: 0;
-  margin-inline-start: 0.4rem;
-  font-size: 1.5em;
-}
-
-.song-artist {
-  margin: 0;
-  margin-inline-start: 0.4rem;
-  font-size: 1em;
 }
 
 /* End main */
