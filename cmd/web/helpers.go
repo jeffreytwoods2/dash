@@ -28,8 +28,7 @@ type subscriber struct {
 }
 
 type OnlineRes struct {
-	OnlinePlayers int      `json:"onlinePlayers"`
-	Online        []string `json:"online"`
+	Players []string `json:"players"`
 }
 
 type PlayerLocationRes struct {
@@ -152,7 +151,7 @@ func (app *application) getPlayers() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	return target.Online, nil
+	return target.Players, nil
 }
 
 func (app *application) getPlayerCoords() ([]models.Player, error) {
@@ -170,7 +169,7 @@ func (app *application) getPlayerCoords() ([]models.Player, error) {
 			return nil, err
 		}
 
-		endpoint = fmt.Sprintf("players/%s/world", player)
+		endpoint = fmt.Sprintf("players/%s", player)
 		rawWorld, err := app.sendAPIReq(endpoint)
 		if err != nil {
 			return nil, err
