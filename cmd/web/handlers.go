@@ -73,23 +73,6 @@ func (app *application) subscribeHandler(w http.ResponseWriter, r *http.Request)
 	}
 }
 
-// func (app *application) publishHandler(w http.ResponseWriter, r *http.Request) {
-// 	if r.Method != "POST" {
-// 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
-// 		return
-// 	}
-// 	body := http.MaxBytesReader(w, r.Body, 8192)
-// 	msg, err := io.ReadAll(body)
-// 	if err != nil {
-// 		http.Error(w, http.StatusText(http.StatusRequestEntityTooLarge), http.StatusRequestEntityTooLarge)
-// 		return
-// 	}
-
-// 	app.publish(msg)
-
-// 	w.WriteHeader(http.StatusAccepted)
-// }
-
 func (app *application) userSignup(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
 	data.Form = userSignupForm{}
@@ -106,7 +89,7 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	wl, err := app.getWhitelist()
+	whitelisted, err := app.playerIsWhitelisted(form.Gamertag)
 	if err != nil {
 		app.serverError(w, r, err)
 		return
@@ -115,7 +98,7 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 	form.CheckField(validator.NotBlank(form.Gamertag), "gamertag", "Gamertag must be provided")
 	form.CheckField(validator.MaxChars(form.Gamertag, 16), "gamertag", "Gamertag cannot be more than 16 characters")
 	form.CheckField(validator.GamertagFormat(form.Gamertag, form.Platform), "gamertag", "Bedrock must begin with a dot, and Java must not.")
-	form.CheckField(validator.PermittedValue(form.Gamertag, wl...), "gamertag", "You are not whitelisted on this server. Did you select the correct platform?")
+	form.CheckField(whitelisted, "gamertag", "You are not whitelisted on this server. Did you select the correct platform?")
 	form.CheckField(validator.MinChars(form.Password, 8), "password", "Password must be at least 8 characters long")
 	form.CheckField(validator.NotBlank(form.Platform), "platform", "Platform must be provided")
 

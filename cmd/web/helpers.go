@@ -126,10 +126,10 @@ func (app *application) renderOnline() {
 	app.publish(buf.Bytes())
 }
 
-func (app *application) sendRcon(endpoint string) ([]byte, error) {
-	url := fmt.Sprintf("http://141.148.153.73:8000/api/v1/%s", endpoint)
+func (app *application) sendAPIReq(endpoint string) ([]byte, error) {
+	url := fmt.Sprintf("http://localhost:8000/api/%s", endpoint)
 	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("Authorization", app.config.rconKey)
+	req.Header.Set("Authorization", "Bearer "+app.config.jwt)
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -143,7 +143,7 @@ func (app *application) sendRcon(endpoint string) ([]byte, error) {
 }
 
 func (app *application) getPlayers() ([]string, error) {
-	getPlayers, err := app.sendRcon("players/online")
+	getPlayers, err := app.sendAPIReq("players/online")
 	if err != nil {
 		return nil, err
 	}
@@ -165,13 +165,13 @@ func (app *application) getPlayerCoords() ([]models.Player, error) {
 	for _, player := range playerList {
 		var currPlayer models.Player
 		endpoint := fmt.Sprintf("players/%s/location", player)
-		rawLocation, err := app.sendRcon(endpoint)
+		rawLocation, err := app.sendAPIReq(endpoint)
 		if err != nil {
 			return nil, err
 		}
 
 		endpoint = fmt.Sprintf("players/%s/world", player)
-		rawWorld, err := app.sendRcon(endpoint)
+		rawWorld, err := app.sendAPIReq(endpoint)
 		if err != nil {
 			return nil, err
 		}
@@ -313,22 +313,23 @@ func (app *application) isAuthenticated(r *http.Request) bool {
 	return app.sessionManager.Exists(r.Context(), "authenticatedUserID")
 }
 
-func (app *application) getWhitelist() ([]string, error) {
+func (app *application) playerIsWhitelisted(player string) (bool, error) {
 	type whitelist struct {
-		Players []string `json:"players"`
+		Whitelisted bool `json:"whitelisted"`
 	}
 	wl := whitelist{}
-	list, err := app.sendRcon("whitelist")
+	endpoint := fmt.Sprintf("whitelist/players/%s", player)
+	result, err := app.sendAPIReq(endpoint)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
-	err = json.Unmarshal(list, &wl)
+	err = json.Unmarshal(result, &wl)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
-	return wl.Players, nil
+	return wl.Whitelisted, nil
 }
 
 func (cfg *config) buildStaticFileList() error {

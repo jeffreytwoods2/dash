@@ -1,14 +1,17 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"database/sql"
 	"flag"
 	"fmt"
 	"html/template"
+	"io"
 	"log/slog"
 	"net/http"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -31,7 +34,7 @@ type config struct {
 		maxIdleConns int
 		maxIdleTime  time.Duration
 	}
-	rconKey       string
+	jwt           string
 	rconPwd       string
 	rconAddr      string
 	serviceWorker struct {
@@ -39,6 +42,10 @@ type config struct {
 		staticFileList []string
 	}
 	subscriberMessageBuffer int
+	wca                     struct {
+		user string
+		pwd  string
+	}
 }
 
 type application struct {
@@ -62,9 +69,10 @@ func main() {
 	flag.IntVar(&cfg.db.maxOpenConns, "db-max-open-conns", 25, "PostgreSQL max open connections")
 	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgreSQL max idle connections")
 	flag.DurationVar(&cfg.db.maxIdleTime, "db-max-idle-time", 15*time.Minute, "PostgreSQL max connection idle time")
-	flag.StringVar(&cfg.rconKey, "rcon-key", os.Getenv("RCON_KEY"), "Authorization key for server RCON endpoints")
-	flag.StringVar(&cfg.rconPwd, "rcon-pwd", os.Getenv("RCON_PASSWORD"), "Password for server RCON on port 25575")
+	flag.StringVar(&cfg.rconPwd, "rcon-pwd", os.Getenv("RCON_PWD"), "Password for server RCON")
 	flag.StringVar(&cfg.rconAddr, "rcon-addr", os.Getenv("RCON_ADDR"), "Server address for RCON requests")
+	flag.StringVar(&cfg.wca.user, "wca-user", os.Getenv("WCA_USER"), "WebCraftAPI user")
+	flag.StringVar(&cfg.wca.pwd, "wca-pwd", os.Getenv("WCA_PWD"), "Password for WebCraftAPI user")
 	flag.IntVar(&cfg.subscriberMessageBuffer, "buffer", 16, "Max number of queued messages for a subscriber")
 	displayVersion := flag.Bool("version", false, "Display version and exit")
 	flag.Parse()
@@ -122,6 +130,12 @@ func main() {
 		WriteTimeout: 3 * time.Second,
 	}
 
+	err = app.getJWT()
+	if err != nil {
+		logger.Error(err.Error())
+		os.Exit(1)
+	}
+
 	go func() {
 		for {
 			if len(app.subscribers) > 0 {
@@ -159,4 +173,29 @@ func openDB(cfg config) (*sql.DB, error) {
 	}
 
 	return db, nil
+}
+
+// Get authentication JWT for the WebCraftAPI service
+func (app *application) getJWT() error {
+	credentials := fmt.Sprintf("{\"username\": \"%s\", \"password\": \"%s\"}", app.config.wca.user, app.config.wca.pwd)
+
+	req, err := http.NewRequest("POST", "http://localhost:8000/api/authenticate", bytes.NewBuffer([]byte(credentials)))
+	if err != nil {
+		return err
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	app.config.jwt = strings.Trim(string(body), "\"")
+
+	return nil
 }
