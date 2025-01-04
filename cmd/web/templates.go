@@ -19,29 +19,19 @@ type disc struct {
 
 var discs = []disc{
 	{
-		Title:     "My Nigga",
-		Artist:    "YG",
-		Namespace: "myniggaygone",
-	},
-	{
-		Title:     "Easy",
-		Artist:    "Lionel Richie",
-		Namespace: "easylionelrichietwo",
+		Title:     "Island Girl",
+		Artist:    "Surf Collective",
+		Namespace: "islandgirlsurfcollectiveone",
 	},
 	{
 		Title:     "The Gutter",
 		Artist:    "Ice Cube",
-		Namespace: "theguttericecubethree",
+		Namespace: "theguttericecubetwo",
 	},
 	{
-		Title:     "Sexual Healing",
-		Artist:    "Marvin Gaye",
-		Namespace: "sexualhealingmarvingayefour",
-	},
-	{
-		Title:     "Island Girl",
-		Artist:    "Surf Collective",
-		Namespace: "islandgirlsurfcollectivefive",
+		Title:     "Easy",
+		Artist:    "Lionel Richie",
+		Namespace: "easylionelrichiethree",
 	},
 }
 
