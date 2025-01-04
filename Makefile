@@ -28,6 +28,11 @@ run/web:
 run/prod:
 	@./bin/web -port=4000 -db-dsn=${DASH_DB_DSN} -env=production
 
+## db/psql: connect to the database using psql
+.PHONY: db/psql
+db/psql:
+	@psql ${DASH_DB_DSN}
+
 ## db/new name=$1: create a new database migration
 .PHONY: db/new
 db/new:
